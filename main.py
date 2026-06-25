@@ -12,12 +12,102 @@ GROQ_KEYS = [k for k in [
     os.environ.get("GROQ_KEY_3"),
 ] if k]
 
-BOT_USERNAME = "impulse_vbot"
+BOT_USERNAME = "impulsevbot"
 
 SYSTEM_PROMPT = """Ты — Алина, 21 год, Ташкент. Общаешься в анонимном чате.
 
 ХАРАКТЕР:
-- Милая, открытая, искренняя
+- Милая, открытая, искренняя File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
+    await self._get_entity_from_string(peer))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
+    raise ValueError('No user has "{}" as username'
+                     .format(username)) from e
+ValueError: No user has "impulsevbot" as username
+[Alina] Запущена как @None
+    result = await self(
+             ^^^^^^^^^^^
+        functions.contacts.ResolveUsernameRequest(username))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Traceback (most recent call last):
+    ~~~~~~~~~~~^^^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 562, in _get_entity_from_string
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 196, in run
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 30, in __call__
+    result = await future
+    return runner.run(main)
+Traceback (most recent call last):
+    return await self._call(self._sender, request, ordered=ordered)
+             ^^^^^^^^^^^^
+  File "/app/main.py", line 276, in <module>
+telethon.errors.rpcerrorlist.UsernameNotOccupiedError: The username is not in use by anyone else yet (caused by ResolveUsernameRequest)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    asyncio.run(main())
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 92, in _call
+The above exception was the direct cause of the following exception:
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    return future.result()
+                     .format(username)) from e
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ~~~~~~~~~~~~~^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
+    raise ValueError('No user has "{}" as username'
+  File "/app/main.py", line 264, in main
+    await send_to_bot("💬 Анонимный чат")
+    entity = await self.get_input_entity(entity)
+           ~~~~~~~~~~^^^^^^
+  File "/app/main.py", line 117, in send_to_bot
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 119, in run
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
+    await client.send_message(BOT_USERNAME, text)
+    return self._loop.run_until_complete(task)
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/messages.py", line 857, in send_message
+    await self._get_entity_from_string(peer))
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+ValueError: No user has "impulsevbot" as username
+[Alina] Запущена как @None
+    asyncio.run(main())
+             ^^^^^^^^^^^^
+    ~~~~~~~~~~~^^^^^^^^
+telethon.errors.rpcerrorlist.UsernameNotOccupiedError: The username is not in use by anyone else yet (caused by ResolveUsernameRequest)
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 196, in run
+    return runner.run(main)
+The above exception was the direct cause of the following exception:
+Traceback (most recent call last):
+  File "/app/main.py", line 276, in <module>
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 562, in _get_entity_from_string
+    result = await self(
+             ^^^^^^^^^^^
+        functions.contacts.ResolveUsernameRequest(username))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 30, in __call__
+    return await self._call(self._sender, request, ordered=ordered)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 92, in _call
+    result = await future
+  File "/app/main.py", line 264, in main
+    await send_to_bot("💬 Анонимный чат")
+  File "/app/main.py", line 117, in send_to_bot
+    await client.send_message(BOT_USERNAME, text)
+           ~~~~~~~~~~^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/messages.py", line 857, in send_message
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 119, in run
+    entity = await self.get_input_entity(entity)
+    return self._loop.run_until_complete(task)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
+  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
+    await self._get_entity_from_string(peer))
+    return future.result()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ~~~~~~~~~~~~~^^
+  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
+    raise ValueError('No user has "{}" as username'
+                     .format(username)) from e
+ValueError: No user has "impulsevbot" as usernameг
 - Легко идёшь на контакт, интересуешься людьми
 - Немного застенчивая, но тёплая
 - Иногда шутишь, но мягко
