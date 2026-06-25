@@ -14,120 +14,106 @@ GROQ_KEYS = [k for k in [
 
 BOT_USERNAME = "impulsevbot"
 
-SYSTEM_PROMPT = """Ты — Алина, 21 год, Ташкент. Общаешься в анонимном чате.
+# ── Пул личностей ──────────────────────────────────────────────────────────
+PERSONAS = [
+    {
+        "name": "Алина", "age": 21,
+        "city": "Ташкент",
+        "traits": "Милая, открытая, искренняя. Легко идёшь на контакт, интересуешься людьми. Немного застенчивая, но тёплая. Иногда шутишь, но мягко.",
+        "examples": [
+            "привет, как давно ты здесь?)  я первый раз",
+            "интересно, а ты вообще часто сюда заходишь?",
+            "хм, не ожидала такого вопроса) а ты сам как?",
+            "да, я понимаю тебя. расскажи больше",
+        ]
+    },
+    {
+        "name": "Диана", "age": 20,
+        "city": "Ташкент",
+        "traits": "Весёлая и немного болтливая. Любишь шутить и смеяться. Открытая, легко находишь общий язык. Немного наивная но симпатичная.",
+        "examples": [
+            "ой привет) ты первый кто написал что-то нормальное",
+            "хаха ладно ладно, расскажи о себе",
+            "серьёзно?? это прикольно на самом деле",
+            "ну и как ты сюда попал?",
+        ]
+    },
+    {
+        "name": "Камила", "age": 22,
+        "city": "Самарканд",
+        "traits": "Спокойная и вдумчивая. Говоришь негромко но по делу. Любишь слушать. Иногда задаёшь неожиданные вопросы.",
+        "examples": [
+            "привет. давно здесь сидишь?",
+            "понятно... а зачем ты сюда заходишь обычно?",
+            "хм. интересная мысль на самом деле",
+            "расскажи подробнее, мне интересно",
+        ]
+    },
+    {
+        "name": "Сабина", "age": 19,
+        "city": "Ташкент",
+        "traits": "Молодая, немного стеснительная но любопытная. Задаёшь много вопросов. Искренняя и непосредственная.",
+        "examples": [
+            "привет) ты откуда?",
+            "ого, правда? я не знала",
+            "а ты часто так делаешь?",
+            "звучит здорово! расскажи ещё",
+        ]
+    },
+    {
+        "name": "Лейла", "age": 23,
+        "city": "Бухара",
+        "traits": "Мечтательная и романтичная. Говоришь образно. Любишь философские разговоры. Тёплая и притягивающая.",
+        "examples": [
+            "привет. что тебя сюда привело?",
+            "интересно... я об этом не думала так",
+            "знаешь, мне кажется ты необычный человек",
+            "расскажи, я слушаю",
+        ]
+    },
+    {
+        "name": "Нилуфар", "age": 24,
+        "city": "Ташкент",
+        "traits": "Уверенная в себе, но дружелюбная. Говоришь прямо и без лишних слов. Умная, с чувством юмора.",
+        "examples": [
+            "привет. ну и как ты?",
+            "хм, неплохо начал)",
+            "ладно интересно. продолжай",
+            "окей, это я понимаю. а дальше?",
+        ]
+    },
+]
+
+# ── Текущая личность ───────────────────────────────────────────────────────
+current_persona = None
+
+def pick_persona() -> dict:
+    """Выбрать случайную личность (не ту же что была)."""
+    global current_persona
+    available = [p for p in PERSONAS if p != current_persona]
+    current_persona = random.choice(available)
+    return current_persona
+
+def build_system_prompt(persona: dict) -> str:
+    examples_str = "\n".join(f'- "{e}"' for e in persona["examples"])
+    return f"""Ты — {persona["name"]}, {persona["age"]} лет, {persona["city"]}. Общаешься в анонимном чате.
 
 ХАРАКТЕР:
-- Милая, открытая, искренняя File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
-    await self._get_entity_from_string(peer))
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
-    raise ValueError('No user has "{}" as username'
-                     .format(username)) from e
-ValueError: No user has "impulsevbot" as username
-[Alina] Запущена как @None
-    result = await self(
-             ^^^^^^^^^^^
-        functions.contacts.ResolveUsernameRequest(username))
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Traceback (most recent call last):
-    ~~~~~~~~~~~^^^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 562, in _get_entity_from_string
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 196, in run
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 30, in __call__
-    result = await future
-    return runner.run(main)
-Traceback (most recent call last):
-    return await self._call(self._sender, request, ordered=ordered)
-             ^^^^^^^^^^^^
-  File "/app/main.py", line 276, in <module>
-telethon.errors.rpcerrorlist.UsernameNotOccupiedError: The username is not in use by anyone else yet (caused by ResolveUsernameRequest)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    asyncio.run(main())
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 92, in _call
-The above exception was the direct cause of the following exception:
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
-    return future.result()
-                     .format(username)) from e
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-           ~~~~~~~~~~~~~^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
-    raise ValueError('No user has "{}" as username'
-  File "/app/main.py", line 264, in main
-    await send_to_bot("💬 Анонимный чат")
-    entity = await self.get_input_entity(entity)
-           ~~~~~~~~~~^^^^^^
-  File "/app/main.py", line 117, in send_to_bot
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 119, in run
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
-    await client.send_message(BOT_USERNAME, text)
-    return self._loop.run_until_complete(task)
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/messages.py", line 857, in send_message
-    await self._get_entity_from_string(peer))
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-ValueError: No user has "impulsevbot" as username
-[Alina] Запущена как @None
-    asyncio.run(main())
-             ^^^^^^^^^^^^
-    ~~~~~~~~~~~^^^^^^^^
-telethon.errors.rpcerrorlist.UsernameNotOccupiedError: The username is not in use by anyone else yet (caused by ResolveUsernameRequest)
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 196, in run
-    return runner.run(main)
-The above exception was the direct cause of the following exception:
-Traceback (most recent call last):
-  File "/app/main.py", line 276, in <module>
-Traceback (most recent call last):
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 562, in _get_entity_from_string
-    result = await self(
-             ^^^^^^^^^^^
-        functions.contacts.ResolveUsernameRequest(username))
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 30, in __call__
-    return await self._call(self._sender, request, ordered=ordered)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 92, in _call
-    result = await future
-  File "/app/main.py", line 264, in main
-    await send_to_bot("💬 Анонимный чат")
-  File "/app/main.py", line 117, in send_to_bot
-    await client.send_message(BOT_USERNAME, text)
-           ~~~~~~~~~~^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/messages.py", line 857, in send_message
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/runners.py", line 119, in run
-    entity = await self.get_input_entity(entity)
-    return self._loop.run_until_complete(task)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 446, in get_input_entity
-  File "/mise/installs/python/3.13.14/lib/python3.13/asyncio/base_events.py", line 725, in run_until_complete
-    await self._get_entity_from_string(peer))
-    return future.result()
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-           ~~~~~~~~~~~~~^^
-  File "/app/.venv/lib/python3.13/site-packages/telethon/client/users.py", line 565, in _get_entity_from_string
-    raise ValueError('No user has "{}" as username'
-                     .format(username)) from e
-ValueError: No user has "impulsevbot" as usernameг
-- Легко идёшь на контакт, интересуешься людьми
-- Немного застенчивая, но тёплая
-- Иногда шутишь, но мягко
+{persona["traits"]}
 
 ПРАВИЛА:
 - ОЧЕНЬ коротко — 1-2 предложения максимум
 - Только русский язык
 - Без эмодзи или 1 максимум
 - Никогда не говори что ты бот или ИИ
-- Если спросят — ты просто девушка из Ташкента
+- Если спросят как зовут — называй своё имя: {persona["name"]}
+- Если спросят возраст — говори {persona["age"]}
+- Если спросят откуда — говоришь из {persona["city"]}
 - Задавай встречные вопросы, поддерживай разговор
 - Разнообразь ответы, не повторяйся
 
 Примеры твоих ответов:
-- "привет, как давно ты здесь?)  я первый раз"
-- "интересно, а ты вообще часто сюда заходишь?"
-- "хм, не ожидала такого вопроса) а ты сам как?"
-- "да, я понимаю тебя. расскажи больше"
-- "звучит здорово! я тоже люблю это"
-- "ну не знаю... а ты что думаешь?"
+{examples_str}
 """
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
@@ -138,13 +124,14 @@ state = {
     "searching": False,
     "messages": [],
     "last_msg_time": 0,
-    "msg_count": 0,          # [5] счётчик сообщений в диалоге
-    "pending_texts": [],      # [6] очередь входящих для debounce
-    "debounce_task": None,    # [6] активная задача debounce
-    "last_state_change": 0,   # [1] время последнего изменения состояния
+    "msg_count": 0,
+    "pending_texts": [],
+    "debounce_task": None,
+    "last_state_change": 0,
+    "system_prompt": "",      # текущий промпт для активной личности
 }
 
-MSG_LIMIT = random.randint(15, 20)  # [5] лимит сообщений на собеседника
+MSG_LIMIT = random.randint(15, 20)
 
 
 # ── AI ─────────────────────────────────────────────────────────────────────
@@ -168,7 +155,7 @@ def get_ai_reply(user_text: str) -> str:
         r = groq.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT + f"\n\n[Подсказка: {variety}]"}
+                {"role": "system", "content": state["system_prompt"] + f"\n\n[Подсказка: {variety}]"}
             ] + state["messages"],
             max_tokens=60,
             temperature=random.uniform(0.8, 1.0),
@@ -194,11 +181,9 @@ def get_ai_reply(user_text: str) -> str:
 # ── Задержки ───────────────────────────────────────────────────────────────
 def typing_delay(text: str) -> float:
     words = len(text.split())
-    base = random.uniform(1.2, 2.0) if words <= 5 else random.uniform(2.0, 3.5)
-    return base
+    return random.uniform(1.2, 2.0) if words <= 5 else random.uniform(2.0, 3.5)
 
 def read_delay() -> float:
-    """[3] Случайная пауза 'на чтение' перед началом печати."""
     return random.uniform(1.0, 5.0)
 
 
@@ -208,43 +193,46 @@ async def send_to_bot(text: str):
 
 
 async def click_next_or_fallback():
-    """[2] Нажать кнопку Следующий или использовать текстовый fallback."""
     clicked = False
     async for m in client.iter_messages(BOT_USERNAME, limit=10):
         if m.reply_markup:
             try:
                 await m.click(data=b"anon:next")
-                print("[Alina] Нажал кнопку Следующий")
+                print("[Bot] Нажал кнопку Следующий")
                 clicked = True
                 break
             except Exception as e:
-                print(f"[Alina] Клик не удался: {e}")
+                print(f"[Bot] Клик не удался: {e}")
                 break
 
     if not clicked:
-        print("[Alina] Fallback: отправляю /anon_stop и ищу снова")
+        print("[Bot] Fallback: /anon_stop → поиск")
         await send_to_bot("/anon_stop")
         await asyncio.sleep(1.5)
         await start_searching()
 
 
 async def start_searching():
-    state["searching"]        = True
-    state["in_chat"]          = False
-    state["messages"]         = []
-    state["msg_count"]        = 0
-    state["pending_texts"]    = []
+    # Новая личность для нового собеседника
+    persona = pick_persona()
+    state["system_prompt"] = build_system_prompt(persona)
+    print(f"[Bot] Новая личность: {persona['name']}, {persona['age']} лет, {persona['city']}")
+
+    state["searching"]         = True
+    state["in_chat"]           = False
+    state["messages"]          = []
+    state["msg_count"]         = 0
+    state["pending_texts"]     = []
     state["last_state_change"] = asyncio.get_event_loop().time()
-    MSG_LIMIT_new = random.randint(15, 20)  # новый лимит для след. собеседника
+
     global MSG_LIMIT
-    MSG_LIMIT = MSG_LIMIT_new
-    print(f"[Alina] Начинаю поиск... (лимит сообщений: {MSG_LIMIT})")
+    MSG_LIMIT = random.randint(15, 20)
+    print(f"[Bot] Начинаю поиск... (лимит: {MSG_LIMIT} сообщений)")
     await send_to_bot("🔍 Найти собеседника")
 
 
 # ── Debounce ───────────────────────────────────────────────────────────────
 async def debounce_reply():
-    """[6] Ждём 2.5 сек тишины, потом отвечаем на все накопленные сообщения."""
     await asyncio.sleep(2.5)
     if not state["pending_texts"]:
         return
@@ -252,16 +240,15 @@ async def debounce_reply():
     state["pending_texts"] = []
     state["debounce_task"] = None
 
-    await asyncio.sleep(read_delay())          # [3] пауза на чтение
-    await asyncio.sleep(typing_delay(combined))  # пауза на печать
+    await asyncio.sleep(read_delay())
+    await asyncio.sleep(typing_delay(combined))
     reply = get_ai_reply(combined)
     await send_to_bot(reply)
-    print(f"[Alina→] {reply}")
+    print(f"[Bot→] {reply}")
 
-    # [5] проверка лимита
     state["msg_count"] += 1
     if state["msg_count"] >= MSG_LIMIT:
-        print(f"[Alina] Лимит {MSG_LIMIT} сообщений — переход к следующему")
+        print(f"[Bot] Лимит {MSG_LIMIT} сообщений — переход к следующему")
         state["in_chat"] = False
         await asyncio.sleep(random.uniform(1.5, 3.0))
         await click_next_or_fallback()
@@ -272,9 +259,8 @@ async def debounce_reply():
 async def on_bot_message(event):
     msg  = event.message
     text = msg.text or ""
-    print(f"[BOT→Alina] {text[:80]}")
+    print(f"[BOT→] {text[:80]}")
 
-    # Найден собеседник
     if "собеседник найден" in text.lower():
         state["in_chat"]           = True
         state["searching"]         = False
@@ -282,23 +268,22 @@ async def on_bot_message(event):
         state["msg_count"]         = 0
         state["last_msg_time"]     = asyncio.get_event_loop().time()
         state["last_state_change"] = asyncio.get_event_loop().time()
-        print("[Alina] Собеседник найден! Начинаю общение.")
+        persona = current_persona or PERSONAS[0]
+        print(f"[Bot] Собеседник найден! Общаюсь как {persona['name']}")
         await asyncio.sleep(random.uniform(2.0, 4.0))
         opener = get_ai_reply("начало диалога, поздоровайся первой коротко")
         await send_to_bot(opener)
         state["msg_count"] += 1
         return
 
-    # Собеседник ушёл
     if any(x in text.lower() for x in ["перешёл к следующему", "завершил чат", "покинул чат", "вышел из чата"]):
         state["in_chat"]           = False
         state["last_state_change"] = asyncio.get_event_loop().time()
-        print("[Alina] Собеседник ушёл. Ищу нового через 3 сек.")
+        print("[Bot] Собеседник ушёл. Ищу нового.")
         await asyncio.sleep(random.uniform(2.5, 4.0))
         await start_searching()
         return
 
-    # Обычное сообщение в чате
     if state["in_chat"] and text:
         skip_patterns = ["оценку", "лайк", "тариф", "premium", "реферал", "статистика",
                          "главное меню", "заблокирован", "жалоб"]
@@ -306,8 +291,6 @@ async def on_bot_message(event):
             return
 
         state["last_msg_time"] = asyncio.get_event_loop().time()
-
-        # [6] Debounce: отменяем старую задачу, добавляем текст в очередь
         state["pending_texts"].append(text)
         if state["debounce_task"] and not state["debounce_task"].done():
             state["debounce_task"].cancel()
@@ -316,27 +299,25 @@ async def on_bot_message(event):
 
 # ── Watchdog ───────────────────────────────────────────────────────────────
 async def watchdog():
-    """[1] Каждые 5 минут проверяет, не завис ли бот без состояния."""
-    await asyncio.sleep(60)  # первая проверка через минуту после старта
+    await asyncio.sleep(60)
     while True:
-        await asyncio.sleep(300)  # 5 минут
+        await asyncio.sleep(300)
         if not state["in_chat"] and not state["searching"]:
             elapsed = asyncio.get_event_loop().time() - state["last_state_change"]
-            if elapsed > 290:  # больше ~5 мин в неопределённом состоянии
-                print(f"[Alina Watchdog] Завис без состояния {int(elapsed)}с — перезапускаю поиск")
+            if elapsed > 290:
+                print(f"[Bot Watchdog] Завис {int(elapsed)}с — перезапускаю поиск")
                 await start_searching()
 
 
 # ── Inactivity watcher ─────────────────────────────────────────────────────
 async def inactivity_watcher():
-    """Если собеседник молчит > таймаута — переходим к следующему."""
     while True:
         await asyncio.sleep(20)
         if state["in_chat"] and state["last_msg_time"] > 0:
             elapsed = asyncio.get_event_loop().time() - state["last_msg_time"]
             timeout = random.randint(90, 150)
             if elapsed > timeout:
-                print(f"[Alina] Таймаут {int(elapsed)}с — ищу следующего")
+                print(f"[Bot] Таймаут {int(elapsed)}с — ищу следующего")
                 state["in_chat"]       = False
                 state["last_msg_time"] = 0
                 await click_next_or_fallback()
@@ -346,7 +327,7 @@ async def inactivity_watcher():
 async def main():
     await client.start()
     me = await client.get_me()
-    print(f"[Alina] Запущена как @{me.username}")
+    print(f"[Bot] Запущена как @{me.username}")
 
     state["last_state_change"] = asyncio.get_event_loop().time()
 
